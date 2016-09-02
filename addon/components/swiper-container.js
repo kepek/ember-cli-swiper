@@ -1,17 +1,119 @@
 import Ember from 'ember';
 import layout from '../templates/components/swiper-container';
 
+const params = Object.keys({
+  // The follwing parameters are copied verbatim from idangerous.swiper.js
+  eventTarget: 'wrapper', // or 'container'
+  mode : 'horizontal', // or 'vertical'
+  touchRatio : 1,
+  speed : 300,
+  freeMode : false,
+  freeModeFluid : false,
+  momentumRatio: 1,
+  momentumBounce: true,
+  momentumBounceRatio: 1,
+  slidesPerView : 1,
+  slidesPerGroup : 1,
+  slidesPerViewFit: true, //Fit to slide when spv "auto" and slides larger than container
+  simulateTouch : true,
+  followFinger : true,
+  shortSwipes : true,
+  longSwipesRatio: 0.5,
+  moveStartThreshold: false,
+  onlyExternal : false,
+  createPagination : true,
+  pagination : false,
+  paginationElement: 'span',
+  paginationClickable: false,
+  paginationAsRange: true,
+  resistance : true, // or false or 100%
+  scrollContainer : false,
+  preventLinks : true,
+  preventLinksPropagation: false,
+  noSwiping : false, // or class
+  noSwipingClass : 'swiper-no-swiping', //:)
+  initialSlide: 0,
+  keyboardControl: false,
+  mousewheelControl : false,
+  mousewheelControlForceToAxis : false,
+  useCSS3Transforms : true,
+  // Autoplay
+  autoplay: false,
+  autoplayDisableOnInteraction: true,
+  autoplayStopOnLast: false,
+  //Loop mode
+  loop: false,
+  loopAdditionalSlides: 0,
+  // Round length values
+  roundLengths: false,
+  //Auto Height
+  calculateHeight: false,
+  //Apply CSS for width and/or height
+  cssWidthAndHeight: false, // or true or 'width' or 'height'
+  //Images Preloader
+  updateOnImagesReady : true,
+  //Form elements
+  releaseFormElements : true,
+  //Watch for active slide, useful when use effects on different slide states
+  watchActiveIndex: false,
+  //Slides Visibility Fit
+  visibilityFullFit : false,
+  //Slides Offset
+  offsetPxBefore : 0,
+  offsetPxAfter : 0,
+  offsetSlidesBefore : 0,
+  offsetSlidesAfter : 0,
+  centeredSlides: false,
+  //Queue callbacks
+  queueStartCallbacks : false,
+  queueEndCallbacks : false,
+  //Auto Resize
+  autoResize : true,
+  resizeReInit : false,
+  //DOMAnimation
+  DOMAnimation : true,
+  //Slides Loader
+  loader: {
+    slides: [], //array with slides
+    slidesHTMLType: 'inner', // or 'outer'
+    surroundGroups: 1, //keep preloaded slides groups around view
+    logic: 'reload', //or 'change'
+    loadAllSlides: false
+  },
+  // One way swipes
+  swipeToPrev: true,
+  swipeToNext: true,
+  //Namespace
+  slideElement: 'div',
+  slideClass: 'swiper-slide',
+  slideActiveClass: 'swiper-slide-active',
+  slideVisibleClass: 'swiper-slide-visible',
+  slideDuplicateClass: 'swiper-slide-duplicate',
+  wrapperClass: 'swiper-wrapper',
+  paginationElementClass: 'swiper-pagination-switch',
+  paginationActiveClass: 'swiper-active-switch',
+  paginationVisibleClass: 'swiper-visible-switch'
+});
+
 export default Ember.Component.extend({
   layout,
   classNames: ['swiper-container'],
   swiper: false,
 
-  swiperOptions: Ember.computed('pagination', 'loop', 'vertical', 'onlyExternal', function() {
+  swiperOptions: Ember.computed.apply(Ember, params.concat('pagination', 'navigation', 'vertical', 'centered', function() {
     let options = {};
 
-    if (this.get('pagination')) {
+    params.forEach((param) => {
+      if (this.get(param) !== undefined) {
+        options[param] = this.get(param);
+      }
+    });
+
+    if (this.get('pagination') === true) {
       options.pagination = `#${this.get('elementId')} .swiper-pagination`;
-      options.paginationClickable = true;
+      if (this.get('paginationClickable') !== false) {
+        options.paginationClickable = true;
+      }
     }
 
     if (this.get('navigation')) {
@@ -19,72 +121,18 @@ export default Ember.Component.extend({
       options.prevButton = '.swiper-button-prev';
     }
 
-    if (this.get('loop')) {
-      options.loop = true;
-    }
-
-    if (this.get('initialSlide')) {
-      options.initialSlide = this.get('initialSlide');
-    }
-
-    // disables swipping
-    if (this.get('followFinger')) {
-      options.followFinger = false;
-    }
-    
-    // disable all user interactions
-    if (this.get('onlyExternal')) {
-      options.onlyExternal = true;
-    }
-
     if (this.get('vertical')) {
       options.direction = 'vertical';
-    }
-
-    if (this.get('slidesPerView')) {
-      options.slidesPerView = this.get('slidesPerView');
-    }
-
-    if (this.get('spaceBetween')) {
-      options.spaceBetween = this.get('spaceBetween');
     }
 
     if (this.get('centered')) {
       options.centeredSlides = true;
     }
 
-    if (this.get('freeMode')) {
-      options.freeMode = true;
-    }
-
-    if (this.get('freeModeSticky')) {
-      options.freeModeSticky = true;
-    }
-
-    if (this.get('grabCursor')) {
-      options.grabCursor = true;
-    }
-    
-    if (this.get('breakpoints')) {
-      options.breakpoints = this.get('breakpoints');
-    }
-
-    if (this.get('autoplay')) {
-      options.autoplay = this.get('autoplay');
-    }
-
-    if (this.get('autoplayStopOnLast')) {
-      options.autoplayStopOnLast = this.get('autoplayStopOnLast');
-    }
-
-    if (this.get('autoplayDisableOnInteraction')) {
-      options.autoplayDisableOnInteraction = this.get('autoplayDisableOnInteraction');
-    }
-
     options.onSlideChangeEnd = this.slideChanged.bind(this);
 
     return options;
-  }),
+  })),
 
   updateTriggered: Ember.observer('updateFor', function() {
     Ember.run.once(this, this.get('swiper').update);
