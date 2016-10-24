@@ -4,86 +4,86 @@ import layout from '../templates/components/swiper-container';
 const params = Object.keys({
   // The follwing parameters are copied verbatim from idangerous.swiper.js
   eventTarget: 'wrapper', // or 'container'
-  mode : 'horizontal', // or 'vertical'
-  touchRatio : 1,
-  speed : 300,
-  freeMode : false,
-  freeModeFluid : false,
+  mode: 'horizontal', // or 'vertical'
+  touchRatio: 1,
+  speed: 300,
+  freeMode: false,
+  freeModeFluid: false,
   momentumRatio: 1,
   momentumBounce: true,
   momentumBounceRatio: 1,
-  slidesPerView : 1,
-  slidesPerGroup : 1,
-  slidesPerViewFit: true, //Fit to slide when spv "auto" and slides larger than container
-  simulateTouch : true,
-  followFinger : true,
-  shortSwipes : true,
+  slidesPerView: 1,
+  slidesPerGroup: 1,
+  slidesPerViewFit: true, // fit to slide when spv "auto" and slides larger than container
+  simulateTouch: true,
+  followFinger: true,
+  shortSwipes: true,
   longSwipesRatio: 0.5,
   moveStartThreshold: false,
-  onlyExternal : false,
-  createPagination : true,
-  pagination : false,
+  onlyExternal: false,
+  createPagination: true,
+  pagination: false,
   paginationElement: 'span',
   paginationClickable: false,
   paginationAsRange: true,
-  resistance : true, // or false or 100%
-  scrollContainer : false,
-  preventLinks : true,
+  resistance: true, // or false or 100%
+  scrollContainer: false,
+  preventLinks: true,
   preventLinksPropagation: false,
-  noSwiping : false, // or class
-  noSwipingClass : 'swiper-no-swiping', //:)
+  noSwiping: false, // or class
+  noSwipingClass: 'swiper-no-swiping', // :)
   initialSlide: 0,
   keyboardControl: false,
-  mousewheelControl : false,
-  mousewheelControlForceToAxis : false,
-  useCSS3Transforms : true,
+  mousewheelControl: false,
+  mousewheelControlForceToAxis: false,
+  useCSS3Transforms: true,
   // Autoplay
   autoplay: false,
   autoplayDisableOnInteraction: true,
   autoplayStopOnLast: false,
-  //Loop mode
+  // Loop mode
   loop: false,
   loopAdditionalSlides: 0,
   // Round length values
   roundLengths: false,
-  //Auto Height
+  // Auto Height
   calculateHeight: false,
-  //Apply CSS for width and/or height
+  // Apply CSS for width and/or height
   cssWidthAndHeight: false, // or true or 'width' or 'height'
-  //Images Preloader
-  updateOnImagesReady : true,
-  //Form elements
-  releaseFormElements : true,
-  //Watch for active slide, useful when use effects on different slide states
+  // Images Preloader
+  updateOnImagesReady: true,
+  // Form elements
+  releaseFormElements: true,
+  // Watch for active slide, useful when use effects on different slide states
   watchActiveIndex: false,
-  //Slides Visibility Fit
-  visibilityFullFit : false,
-  //Slides Offset
-  offsetPxBefore : 0,
-  offsetPxAfter : 0,
-  offsetSlidesBefore : 0,
-  offsetSlidesAfter : 0,
+  // Slides Visibility Fit
+  visibilityFullFit: false,
+  // Slides Offset
+  offsetPxBefore: 0,
+  offsetPxAfter: 0,
+  offsetSlidesBefore: 0,
+  offsetSlidesAfter: 0,
   centeredSlides: false,
-  //Queue callbacks
-  queueStartCallbacks : false,
-  queueEndCallbacks : false,
-  //Auto Resize
-  autoResize : true,
-  resizeReInit : false,
-  //DOMAnimation
-  DOMAnimation : true,
-  //Slides Loader
+  // Queue callbacks
+  queueStartCallbacks: false,
+  queueEndCallbacks: false,
+  // Auto Resize
+  autoResize: true,
+  resizeReInit: false,
+  // DOMAnimation
+  DOMAnimation: true,
+  // Slides Loader
   loader: {
-    slides: [], //array with slides
+    slides: [], // array with slides
     slidesHTMLType: 'inner', // or 'outer'
-    surroundGroups: 1, //keep preloaded slides groups around view
-    logic: 'reload', //or 'change'
+    surroundGroups: 1, // keep preloaded slides groups around view
+    logic: 'reload', // or 'change'
     loadAllSlides: false
   },
   // One way swipes
   swipeToPrev: true,
   swipeToNext: true,
-  //Namespace
+  // Namespace
   slideElement: 'div',
   slideClass: 'swiper-slide',
   slideActiveClass: 'swiper-slide-active',
@@ -169,11 +169,11 @@ export default Ember.Component.extend({
     });
   }),
 
-  initSwiper: function () {
-    Ember.run.schedule('afterRender', this, function () {
+  initSwiper: Ember.on('init', function() {
+    Ember.run.schedule('afterRender', this, function() {
       this.set('swiper', new Swiper(`#${this.get('elementId')}`, this.get('swiperOptions')));
       this.set('registerAs', this);
     });
-  }.on('init')
+  })
 
 });

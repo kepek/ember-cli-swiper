@@ -1,3 +1,7 @@
 {
-  "preset": "ember-suave"
+  "preset": "ember-suave",
+  "disallowVar": false,
+  "requireSpread": false,
+  "disallowEmptyBlocks": false,
+  "disallowDirectPropertyAccess": false
 }
